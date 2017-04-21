@@ -8,12 +8,77 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
 <link href="main.css" media="all" rel="stylesheet" type="text/css" />
 </head>
-<body>
+<body id="body">
 <script src="jquery-2.1.1.js"></script>
 <script>
 $.getJSON('data.json', function (data) {
-    console.log(data);
+    //List of all the months
+    var stringMonth = ["January", "February", "March", "April", "May", "June", "July",
+     "August", "September", "October", "November", "December"];
+    //If more years are supplied with the JSON data, add the year in years array;
+    var years = [2009];
+
+    //Setups the table and adds it to the div container
+    var container = document.createElement('div');
+    container.setAttribute('id', 'tbl-container');
+    document.getElementById("body").appendChild(container);
+
+    var table = createTable();
+
+    //Builds the rows for the table and appends them to it.
+    for(year in years){
+      for(var i = 1; i <= 12; i++){
+        if(i < 10){
+          month = year + "-0" + i;
+        }else{
+          month = year + "-" + i;
+        }
+        x = data[month]
+        y = stringMonth[i-1] + " " + year;
+        var row = createRow(x, y);
+        table.appendChild(row);
+      }
+    }
+
 });
+
+// Creates the base table, which we can add rows to
+function createTable(){
+  var table, thead;
+  var td = new Array();
+  var headings = ["Date", "BBC One", "BBC Two", "BBC Three", "BBC Four", "BBC News 24", "CBBC", "Cbeebies"];
+
+  table = document.createElement("table");
+  thead = document.createElement("thead");
+
+  for (var i = 0; i < headings.length; i++){
+    var x = document.createElement("td");
+    x.appendChild(document.createTextNode(headings[i]));
+    thead.appendChild(x);
+  }
+
+  table.appendChild(thead);
+  document.getElementById("tbl-container").appendChild(table);
+  return table;
+}
+
+// Creates a single row from the object and month string
+function createRow(object, month){
+  var row = document.createElement("tr");
+  var objKey = ["bbcone", "bbctwo", "bbcthree", "bbcfour", "bbcnews24", "cbbc", "cbeebies"]
+
+  for(var i = 0; i < 8; i++){
+    var td = document.createElement("td");
+    if(i == 0){
+      td.appendChild(document.createTextNode(month));
+    } else{
+      td.appendChild(document.createTextNode(object[objKey[i - 1]]));
+    }
+    row.appendChild(td);
+  }
+
+  return row;
+}
 </script>
 </body>
 </html>

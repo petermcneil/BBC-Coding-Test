@@ -9,27 +9,34 @@
 <link href="main.css" media="all" rel="stylesheet" type="text/css" />
 </head>
 <body id="body">
+    <div id="tbl-container"></div>
 <script src="jquery-2.1.1.js"></script>
 <script>
 $.getJSON('data.json', function (data) {
-    // Gathers all keys from the data object
-    var keys = Object.keys(data);
-
     //Setups the table and adds it to the div container
-    var container = document.createElement('div');
-    container.setAttribute('id', 'tbl-container');
-    document.getElementById("body").appendChild(container);
     var table = createTable();
     document.getElementById("tbl-container").appendChild(table);
+    
+    addRows(data);
+});
 
-    //Builds the rows for the table and appends them to it.
+//Adds data from 2016 - which is just a copy with dates changed and empty data added for BBC Threes move online 
+$.getJSON('data2016.json', function(data){
+    addRows(data);
+});
+  
+//Pulled out the row adder as it was being used multiple times
+function addRows(data){
+    var keys = Object.keys(data);
+    var table = document.getElementById("tbl-container").firstChild;
+    
     for(var i = 0; i < keys.length; i++){
       x = data[keys[i]];
       y = parseDate(keys[i]);
       var row = createRow(x, y);
       table.appendChild(row);
     }
-});
+}
 
 // Creates the base table, which we can add rows to
 function createTable(){
@@ -42,6 +49,7 @@ function createTable(){
   for (var i = 0; i < headings.length; i++){
     var x = document.createElement("td");
     x.appendChild(document.createTextNode(headings[i]));
+    x.setAttribute("onclick", "sortTable("+ i +")")
     thead.appendChild(x);
   }
 
@@ -53,13 +61,20 @@ function createTable(){
 function createRow(object, date){
   var row = document.createElement("tr");
   var objKey = ["bbcone", "bbctwo", "bbcthree", "bbcfour", "bbcnews24", "cbbc", "cbeebies"]
-
-  for(var i = 0; i <= objKey.length; i++){
+  
+  var i, j = objKey.length;
+    
+  for(i = 0; i <= j; i++){
     var td = document.createElement("td");
     if(i == 0){
       td.appendChild(document.createTextNode(date));
     } else{
       td.appendChild(document.createTextNode(object[objKey[i - 1]]));
+    }
+    
+    //Used to allow CSS to colour absent data differently
+    if (td.innerHTML == "N/A"){
+        td.setAttribute("class", "no-data");
     }
     row.appendChild(td);
   }
@@ -78,6 +93,10 @@ function parseDate(input){
   month = stringMonth[month - 1];
 
   return month + " " + year;
+}
+    
+function sortTable(column){
+    console.log(column);
 }
 </script>
 </body>

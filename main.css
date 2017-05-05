@@ -3,6 +3,7 @@
 */
 body{
   font-family: "Georgia";
+  background-color: #ccffcc;
 }
 
 div {
@@ -29,7 +30,7 @@ th, td {
 }
 
 tr:nth-child(even){background-color: #f2f2f2}
-
+tr:nth-child(odd){background-color: white}
 tr:hover{
     background-color: black;
     color: white;

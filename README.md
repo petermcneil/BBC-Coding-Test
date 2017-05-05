@@ -6,5 +6,5 @@ For this I have:
 
 - Rendered a table from the data.json file using JavaScript
 - Edited the CSS to change the position and style of the table
-- Added an addition json file (data2016.json)
+- Added an additional json file (data2016.json)
 - Implemented an add/remove button to display the data2016.json file

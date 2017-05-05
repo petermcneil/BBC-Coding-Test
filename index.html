@@ -10,7 +10,7 @@
 </head>
 <body id="body">
     <div id="tbl-container"></div>
-<script src="jquery-2.1.1.js"></script>
+    <script src="jquery-2.1.1.js"></script>
 <script>
 $.getJSON('data.json', function (data) {
     //Setups the table and adds it to the div container
@@ -18,13 +18,38 @@ $.getJSON('data.json', function (data) {
     document.getElementById("tbl-container").appendChild(table);
     
     addRows(data);
+    
+    var button = document.createElement("button");
+    button.setAttribute("onclick", "add2016()");
+    button.setAttribute("id", "btn");
+    button.innerHTML = 'Get 2016 data';
+
+    document.getElementById("tbl-container").appendChild(button);
 });
 
 //Adds data from 2016 - which is just a copy with dates changed and empty data added for BBC Threes move online 
-$.getJSON('data2016.json', function(data){
-    addRows(data);
-});
-  
+function add2016() {
+    $.getJSON('data2016.json', function(data){
+        addRows(data);
+    });
+    document.getElementById("btn").setAttribute("onclick", "remove2016()");
+    document.getElementById("btn").innerHTML = "Remove 2016";
+}
+
+function remove2016() {
+    var table = document.getElementById("tbl");
+    var rows = table.getElementsByTagName("tr");
+    for (var i = rows.length -1 ; i >= 0; i--){
+        var details = rows[i].getElementsByTagName("td");
+        if(details[0].innerHTML.includes("2016")){
+          table.removeChild(rows[i]);
+          console.log("Contains 2016 " + i);
+        }
+    }
+    document.getElementById("btn").setAttribute("onclick", "add2016()");
+    document.getElementById("btn").innerHTML = "Get 2016 data";
+}
+
 //Pulled out the row adder as it was being used multiple times
 function addRows(data){
     var keys = Object.keys(data);
@@ -46,6 +71,7 @@ function createTable(){
   table = document.createElement("table");
   thead = document.createElement("thead");
 
+  table.setAttribute("id", "tbl");
   for (var i = 0; i < headings.length; i++){
     var x = document.createElement("td");
     x.appendChild(document.createTextNode(headings[i]));
